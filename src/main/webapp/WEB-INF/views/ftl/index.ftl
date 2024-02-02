@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ToDo List</title>
-    <link href="/css/styles.css" rel="stylesheet">
-    <script src="/js/task.js" defer></script>
+    <link href="/root/css/styles.css" rel="stylesheet">
+    <script src="/root/js/task.js" defer></script>
 </head>
 <head>
 <body>
@@ -17,7 +17,7 @@
                         <#if page == model["currentPage"]>
                             <span class="current-page">${page}</span>
                         <#else>
-                            <a href="/todo?page=${page}&limit=8" class="page-link">${page}</a>
+                            <a href="/root/todo?page=${page}&limit=8" class="page-link">${page}</a>
                         </#if>
                     </#list>
                 </div>
@@ -41,7 +41,7 @@
                                   <div class="task-input" contenteditable="false">${task.description}</div>
                                   <button class="button btn-edit" id="editButton-${task.id}" onclick="editTask('${task.id}', '${task.description}', '${task.status}')">Edit</button>
                                   <button class="button btn-delete" onclick="deleteTask(${task.id})">
-                                      <img class="delete-image" src="/img/delete.png" alt="Delete task image">
+                                      <img class="delete-image" src="/root/img/delete.png" alt="Delete task image">
                                   </button>
                               </li>
                           </#if>

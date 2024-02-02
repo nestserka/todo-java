@@ -1,7 +1,7 @@
 let modalWindow;
 
 const deleteTask = (id) => {
-    const url = `/delete/${id}`;
+    const url = currentUrl() + `delete/${id}`;
     fetch(url, {
         method: 'DELETE',
     })
@@ -16,7 +16,7 @@ const deleteTask = (id) => {
 }
 
 const updateData = (taskID, initialDescription, initialStatus) => {
-    const url = `/todo/${taskID}`;
+    const url = currentUrl() + `todo/${taskID}`;
     
     const data = {
         description: initialDescription,
@@ -135,4 +135,10 @@ function closeWindow() {
         modalWindow.innerHTML = "";
     }, 500);
     location.reload();
+}
+
+function currentUrl(){
+ let current_path = window.location.href;
+ let end_position = current_path.indexOf("?")
+    return current_path.substring(0, end_position)
 }
