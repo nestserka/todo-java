@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import static java.util.Objects.isNull;
 
+import java.util.Locale;
+
 @Controller
 public class TaskController {
 
@@ -21,6 +23,11 @@ public class TaskController {
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String home(Locale locale, Model model) {
+        return "redirect:/todo";
+    }
+
+    @RequestMapping(value = "/todo", method = RequestMethod.GET)
     public String tasks (@ModelAttribute("model") ModelMap model,
                              @RequestParam(value ="page", required = false, defaultValue = "1") int page,
                              @RequestParam(value ="limit", required = false, defaultValue = "10") int limit){
@@ -28,27 +35,29 @@ public class TaskController {
         return "index";
     }
 
-    @PostMapping("/{id}")
-    public void edit(Model model, @PathVariable Integer id,
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public String add(@ModelAttribute("info") TaskInfo info){
+        taskService.create(info.getDescription(), info.getStatus());
+        return "redirect:/todo";
+    }
+    
+    @PostMapping("/todo/{id}")
+    public String edit(@PathVariable Integer id,
                      @RequestBody TaskInfo info){
         if (isNull(id) || id <= 0){
             throw new RuntimeException("Invalid id");
         }
         taskService.edit(id, info.getDescription(), info.getStatus());
+        return "redirect:/todo";
     }
-
-    @PostMapping("/")
-    public void add(Model model, @RequestBody TaskInfo info){
-        taskService.create(info.getDescription(), info.getStatus());
-    }
-
-    @DeleteMapping("/{id}")
+    
+    @RequestMapping(value = "todo/delete/{id}", method = RequestMethod.DELETE)
     public String delete(Model model, @PathVariable Integer id){
         if (isNull(id) || id <= 0){
             throw new RuntimeException("Invalid id");
         }
         taskService.delete(id);
-        return "index";
+        return "redirect:/todo";
     }
 
 }

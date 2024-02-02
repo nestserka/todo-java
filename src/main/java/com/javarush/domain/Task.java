@@ -1,7 +1,6 @@
 package com.javarush.domain;
 
 import jakarta.persistence.*;
-import org.springframework.stereotype.Component;
 
 @Entity
 @Table (name = "task", schema = "public")
