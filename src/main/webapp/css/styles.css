@@ -33,6 +33,7 @@ header{
    height:60px;
    background-color: #ebfc6a;
    padding:10px;
+   border:2px solid #bd64fc;
 }
 
 main {
@@ -94,8 +95,8 @@ input{
     transform: rotate(0);
   }
 
-.btn-submit:hover{
-    background-color: #7a00ff;
+  .btn-submit:hover{
+    background-color: #bd64fc;
 }
 
 .btn-edit, .btn-save, .btn-submit {
