@@ -15,42 +15,28 @@
     <main>
           <section id="section-current" class="section">
           <h2>Task List</h2>
-          <h3>In Progress </h3>
-        <#list model["tasks"] as task>
-        <#if task.status == 0>
-          <ul>
-            <li class="task-item">
-            <div class="task-input" contenteditable="false">${task.description}</div>
-            <button class="button btn-edit" id="editButton-${task.id}" onclick="editTask(${task.id}, '${task.description}', ${task.status})">Edit</button>
-              <button class="button btn-delete" onclick="deleteTask(${task.id})">
-                <img class="delete-image" src="./delete.png" alt="Deleta task image">
-              </button>
-            </li>
-          </ul>
-          <#elseif task.status == 1>
-          <h3>Done</h3>
-          <ul>
-            <li class="task-item">
-            <div class="task-input" contenteditable="false">${task.description}</div>
-            <button class="button btn-edit" id="editButton-${task.id}" onclick="editTask(${task.id}, '${task.description}', ${task.status})">Edit</button>
-              <button class="button btn-delete" onclick="deleteTask(${task.id})">
-                <img class="delete-image" src="./delete.png" alt="Deleta task image">
-              </button>
-            </li>
-          </ul>
-          <h3>Paused </h3>
-          <#elseif task.status == 2>
-          <ul>
-            <li class="task-item">
-            <div class="task-input" contenteditable="false">${task.description}</div>
-            <button class="button btn-edit" id="editButton-${task.id}" onclick="editTask(${task.id}, '${task.description}', ${task.status})">Edit</button>
-              <button class="button btn-delete" onclick="deleteTask(${task.id})">
-                <img class="delete-image" src="./delete.png" alt="Deleta task image">
-              </button>
-            </li>
-          </ul>
-      </#if>
-    </#list>
+              <#list ["IN_PROGRESS", "DONE", "PAUSED"] as status>
+                  <#if status == "IN_PROGRESS">
+                      <h3>In Progress</h3>
+                  <#elseif status == "DONE">
+                      <h3>Done</h3>
+                  <#elseif status == "PAUSED">
+                      <h3>Paused</h3>
+                  </#if>
+                  <ul>
+                      <#list model["tasks"]?sort_by("id") as task>
+                          <#if task.status == status>
+                              <li class="task-item">
+                                  <div class="task-input" contenteditable="false">${task.description}</div>
+                                  <button class="button btn-edit" id="editButton-${task.id}" onclick="editTask('${task.id}', '${task.description}', '${task.status}')">Edit</button>
+                                  <button class="button btn-delete" onclick="deleteTask(${task.id})">
+                                      <img class="delete-image" src="/img/delete.png" alt="Delete task image">
+                                  </button>
+                              </li>
+                          </#if>
+                      </#list>
+                  </ul>
+              </#list>
         </section>
         <section id="section-new-task" class="section">
             <h2>New Task</h2>
@@ -62,9 +48,9 @@
                 <div class="info__wrapper-input"> 
                 <label for="status">Status</label>
                 <select name="status">
-                  <option value="0">In Progress</option>
-                  <option value="1">Done</option>
-                  <option value="2">Paused</option>
+                  <option value="IN_PROGRESS">In Progress</option>
+                  <option value="DONE">Done</option>
+                  <option value="PAUSED">Paused</option>
                 </select>
                 </div>
                 <input type="submit" value="Save" class="btn-submit"/>

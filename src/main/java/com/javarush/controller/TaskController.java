@@ -1,6 +1,7 @@
 package com.javarush.controller;
 
 import com.javarush.dao.TaskInfo;
+import com.javarush.domain.Status;
 import com.javarush.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,7 +31,7 @@ public class TaskController {
     @RequestMapping(value = "/todo", method = RequestMethod.GET)
     public String tasks (@ModelAttribute("model") ModelMap model,
                              @RequestParam(value ="page", required = false, defaultValue = "1") int page,
-                             @RequestParam(value ="limit", required = false, defaultValue = "10") int limit){
+                             @RequestParam(value ="limit", required = false, defaultValue = "40") int limit){
         model.addAttribute("tasks", taskService.getAll((page - 1) * limit,limit));
         return "index";
     }
@@ -40,9 +41,8 @@ public class TaskController {
         taskService.create(info.getDescription(), info.getStatus());
         return "redirect:/todo";
     }
-    
-    @PostMapping("/todo/{id}")
-    public String edit(@PathVariable Integer id,
+    @RequestMapping(value = "/todo/{id}", method = RequestMethod.POST)
+    public String edit(@PathVariable ("id") Integer id,
                      @RequestBody TaskInfo info){
         if (isNull(id) || id <= 0){
             throw new RuntimeException("Invalid id");
@@ -51,13 +51,12 @@ public class TaskController {
         return "redirect:/todo";
     }
     
-    @RequestMapping(value = "todo/delete/{id}", method = RequestMethod.DELETE)
-    public String delete(Model model, @PathVariable Integer id){
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
+    public void delete(Model model, @PathVariable ("id") Integer id){
         if (isNull(id) || id <= 0){
             throw new RuntimeException("Invalid id");
         }
         taskService.delete(id);
-        return "redirect:/todo";
     }
 
 }

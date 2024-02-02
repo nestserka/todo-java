@@ -1,13 +1,18 @@
 let modalWindow;
 
 const deleteTask = (id) => {
-    const url = `todo/delete/${id}`;
+    const url = `/delete/${id}`;
     fetch(url, {
         method: 'DELETE',
     })
-    .then(res => res.text())
-    .then(res => console.log(res))
-    .catch(error => console.error('Error:', error));
+        .then(res => {
+            return res.text();
+        })
+        .then(res => {
+            location.reload();
+            console.log(res);
+        })
+        .catch(error => console.error('Error:', error));
 }
 
 const updateData = (taskID, initialDescription, initialStatus) => {
@@ -18,26 +23,22 @@ const updateData = (taskID, initialDescription, initialStatus) => {
         status: initialStatus
     };
 
-    fetch(url, {
+    return fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        closeWindow();
-        return response.json();
-    })
-    .then(data => {
-        console.log('Success:', data);
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            throw error;
+        });
 }
 
 const editTask = (taskId, description, status) => {
@@ -55,8 +56,19 @@ function closeWindow() {
 }
 
 const saveEditedTask = (taskID, initialDescription, initialStatus) =>{
-    let updatedDescription = initialDescription;
-    let updatedStatus = initialStatus;
+    updateData(taskID, initialDescription, initialStatus)
+        .then(() => {
+            closeWindow();
+        })
+        .catch(error => {
+            console.error("Error updating data:", error);
+        });
+}
+
+const setSaveButton = (taskID, description, status) => {
+    const save = document.querySelector(".btn-save");
+    let updatedDescription = description;
+    let updatedStatus = status;
 
     const modalDescriptionInput = document.getElementById("modalDescription");
     const modalStatusSelect = document.getElementById("modalStatus");
@@ -69,13 +81,8 @@ const saveEditedTask = (taskID, initialDescription, initialStatus) =>{
     modalStatusSelect.addEventListener("change", function() {
         updatedStatus = this.value;
     });
-    updateData(taskID, updatedDescription, updatedStatus);
-}
-
-const setSaveButton = (taskID, description, status) => {
-    const save = document.querySelector(".btn-save");
     save.addEventListener('click', function() {
-        saveEditedTask(taskID, description, status);
+        saveEditedTask(taskID,  updatedDescription, updatedStatus);
     });
 }
 
@@ -88,17 +95,18 @@ function openModal(taskId, description, status) {
         <input type="text" name="description" id="modalDescription" value="${description}">
         <p>Status:</p>
         <select name="status" id="modalStatus">
-            <option value="0" ${status === "0" ? "selected" : ""}>In Progress</option>
-            <option value="1" ${status === "1" ? "selected" : ""}>Done</option>
-            <option value="2" ${status === "2" ? "selected" : ""}>Paused</option>
+            <option value="0" ${status === "IN_PROGRESS" ? "selected" : ""}>In Progress</option>
+            <option value="1" ${status === "DONE" ? "selected" : ""}>Done</option>
+            <option value="2" ${status === "PAUSED" ? "selected" : ""}>Paused</option>
         </select>
         <button class="button btn-save">Save</button>
     </div>
 </div>
     `;
     modalWindow.insertAdjacentHTML("beforeEnd", modalBody);
-    setSaveButton(taskID, description, status);
-    openModelWindow();
+    console.log(taskId)
+    setSaveButton(taskId, description, status);
+    openModelWindow()
 }
 
 function openModelWindow() {
@@ -118,3 +126,13 @@ function openModelWindow() {
       }, 300);
     }
   }
+
+function closeWindow() {
+    modalWindow.classList.add("modal_hide");
+    setTimeout(function () {
+        modalWindow.classList.remove("modal_visibility");
+        modalWindow.classList.remove("modal_hide");
+        modalWindow.innerHTML = "";
+    }, 500);
+    location.reload();
+}
