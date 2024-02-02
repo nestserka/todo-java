@@ -2,6 +2,7 @@ package com.javarush.controller;
 
 import com.javarush.dao.TaskInfo;
 import com.javarush.domain.Status;
+import com.javarush.domain.Task;
 import com.javarush.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import static java.util.Objects.isNull;
 
+import java.util.List;
 import java.util.Locale;
 
 @Controller
@@ -31,8 +33,13 @@ public class TaskController {
     @RequestMapping(value = "/todo", method = RequestMethod.GET)
     public String tasks (@ModelAttribute("model") ModelMap model,
                              @RequestParam(value ="page", required = false, defaultValue = "1") int page,
-                             @RequestParam(value ="limit", required = false, defaultValue = "40") int limit){
-        model.addAttribute("tasks", taskService.getAll((page - 1) * limit,limit));
+                             @RequestParam(value ="limit", required = false, defaultValue = "8") int limit){
+        List<Task> paginatedTasks = taskService.getAll((page - 1) * limit, limit);
+        int totalCount = taskService.getAllCount();
+        int totalPages = (int) Math.ceil((double) totalCount / limit);
+        model.addAttribute("tasks", paginatedTasks);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("currentPage", page);
         return "index";
     }
 

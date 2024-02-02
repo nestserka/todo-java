@@ -20,7 +20,7 @@ public class TaskDAO {
     }
     @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
     public List<Task> getAll(int offset, int limit){
-        Query<Task> query = getSession().createQuery("select t from Task t", Task.class);
+        Query<Task> query = getSession().createQuery("select t from Task t order by id desc", Task.class);
         query.setFirstResult(offset);
         query.setMaxResults(limit);
         return query.getResultList();

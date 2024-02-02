@@ -10,7 +10,18 @@
 <head>
 <body>
     <header>
-        <h1>Task List</h1>
+        <h1>ToDo App</h1>
+            <#if model["totalPages"] gt 1>
+                <div class="pagination">
+                    <#list 1..model["totalPages"] as page>
+                        <#if page == model["currentPage"]>
+                            <span class="current-page">${page}</span>
+                        <#else>
+                            <a href="/todo?page=${page}&limit=8" class="page-link">${page}</a>
+                        </#if>
+                    </#list>
+                </div>
+            </#if>
     </header>
     <main>
           <section id="section-current" class="section">

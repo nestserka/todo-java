@@ -20,10 +20,6 @@ public class TaskService {
     }
 
     public List<Task> getAll(int offset, int limit){
-        List <Task> tasks = taskDAO.getAll(offset, limit);
-        for (Task s : tasks){
-            System.out.println(s.getStatus());
-        }
         return taskDAO.getAll(offset, limit);
     }
 
