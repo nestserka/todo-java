@@ -1,22 +1,23 @@
-version: "3.9"
+#NOT USED FOR RUNNING DB ON YOUR MACHINE CHECK READ.ME FILE
 
-services:
-  db:
-    image: postgres:16
-    hostname: postgres
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - '5433:5432'
-    volumes:
-      - my-db:/var/lib/postgresql/data
-    healthcheck:
-      test: "pg_isready -h db"
-      interval: 30s
-      timeout: 60s
-      retries: 5
-      start_period: 80s
-
-volumes:
-  my-db:
+#
+#services:
+#  db:
+#    image: postgres:16
+#    hostname: postgres
+#    environment:
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: postgres
+#    ports:
+#      - '5433:5432'
+#    volumes:
+#      - my-db:/var/lib/postgresql/data
+#    healthcheck:
+#      test: "pg_isready -h db"
+#      interval: 30s
+#      timeout: 60s
+#      retries: 5
+#      start_period: 80s
+#
+#volumes:
+#  my-db:
