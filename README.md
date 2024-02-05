@@ -79,7 +79,7 @@ docker run -d --name todo-java-app-container -p 8080:8080 --link my-postgres-con
 
 if you run application correctly, application should be accessed through:
 ```sh
-http://localhost:8080/root/todo
+http://localhost:8080/root
 ```
 You must see the following:
 
